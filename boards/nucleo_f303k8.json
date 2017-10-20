@@ -1,0 +1,31 @@
+{
+  "build": {
+    "cpu": "cortex-m4",
+    "extra_flags": "-DSTM32F303x8",
+    "f_cpu": "72000000L",
+    "mcu": "stm32f303k8t6"
+  },
+  "frameworks": [
+    "mbed",
+    "stm32cube"
+  ],
+  "name": "ST Nucleo F303K8",
+  "upload": {
+    "maximum_ram_size": 16384,
+    "maximum_size": 65536
+  },
+  "debug": {
+    "tools": {
+      "stlink-v2-1": {
+        "server": {
+          "package": "tool-openocd",
+          "executable": "bin/openocd",
+          "arguments": ["-f", "scripts/board/st_nucleo_f3.cfg"]
+        },
+        "onboard": true
+      }
+    }
+  },
+  "url": "https://developer.mbed.org/platforms/ST-Nucleo-F303K8/",
+  "vendor": "ST"
+}

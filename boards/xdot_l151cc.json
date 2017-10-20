@@ -1,0 +1,19 @@
+{
+  "build": {
+    "cpu": "cortex-m3",
+    "extra_flags": "-DSTM32L151xC",
+    "f_cpu": "32000000L",
+    "mcu": "stm32l151ccu6"
+  },
+  "frameworks": [
+    "mbed",
+    "stm32cube"
+  ],
+  "name": "MultiTech xDot",
+  "upload": {
+    "maximum_ram_size": 32768,
+    "maximum_size": 262144
+  },
+  "url": "https://developer.mbed.org/platforms/MTS-xDot-L151CC/",
+  "vendor": "MultiTech"
+}

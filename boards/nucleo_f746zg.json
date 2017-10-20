@@ -1,0 +1,36 @@
+{
+  "build": {
+    "cpu": "cortex-m7",
+    "extra_flags": "-DSTM32F746xx",
+    "f_cpu": "216000000L",
+    "mcu": "stm32f746zgt6"
+  },
+  "frameworks": [
+    "mbed",
+    "stm32cube"
+  ],
+  "name": "ST Nucleo F746ZG",
+  "upload": {
+    "maximum_ram_size": 327680,
+    "maximum_size": 1048576
+  },
+  "debug": {
+    "tools": {
+      "stlink-v2-1": {
+        "server": {
+          "package": "tool-openocd",
+          "executable": "bin/openocd",
+          "arguments": [
+            "-f", "scripts/interface/stlink-v2-1.cfg",
+            "-c", "transport select hla_swd",
+            "-f", "scripts/target/stm32f7x.cfg",
+            "-c", "reset_config srst_nogate"
+          ]
+        },
+        "onboard": true
+      }
+    }
+  },
+  "url": "https://developer.mbed.org/platforms/ST-Nucleo-F446ZE/",
+  "vendor": "ST"
+}

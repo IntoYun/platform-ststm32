@@ -1,0 +1,61 @@
+{
+    "build": {
+        "core": "intorobot",
+        "cpu": "cortex-m4",
+        "extra_flags": "-DSTM32F411xE -DPLATFORM_ID=188002 -DPLATFORM_NAME=gl2000 -mfloat-abi=softfp -mfpu=fpv4-sp-d16",
+        "f_cpu": "96000000L",
+        "hwids": [
+            ["0x0483", "0xdf11"],
+            ["0x0483", "0x5740"]
+        ],
+        "ldscript": "linker_stm32f411xe_app.ld",
+        "startup_object": "startup_stm32f411xe.S.o",
+        "mcu": "STM32F4",
+        "variant": "intorobot-gl2000"
+    },
+    "frameworks": [
+        "intorobot",
+        "mbed",
+        "arduino"
+    ],
+    "name": "IntoRobot GL2000(512k flash, 128k sram)",
+    "upload": {
+        "disable_flushing": false,
+        "maximum_ram_size": 131072,
+        "maximum_size": 458752,
+        "protocol": "dfu",
+        "require_upload_port": true,
+        "use_1200bps_touch": false,
+        "wait_for_upload_port": false,
+        "address": "0x08020000"
+    },
+    "url": "https://www.intoyun.com/hardware",
+    "vendor": "IntoRobot",
+    "debug": {
+        "tools": {
+            "stlink-v2": {
+                "server": {
+                    "package": "tool-openocd",
+                    "executable": "bin/openocd",
+                    "arguments": [
+                        "-f", "scripts/interface/stlink-v2.cfg",
+                        "-c", "transport select hla_swd",
+                        "-f", "scripts/target/stm32f4x.cfg"
+                    ]
+                },
+                "default": true
+            },
+            "stlink-v2-1": {
+                "server": {
+                    "package": "tool-openocd",
+                    "executable": "bin/openocd",
+                    "arguments": [
+                        "-f", "scripts/interface/stlink-v2-1.cfg",
+                        "-c", "transport select hla_swd",
+                        "-f", "scripts/target/stm32f4x.cfg"
+                    ]
+                }
+            }
+        }
+    }
+}

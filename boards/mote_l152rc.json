@@ -1,0 +1,30 @@
+{
+  "build": {
+    "cpu": "cortex-m3",
+    "extra_flags": "-DSTM32L152xC",
+    "f_cpu": "32000000L",
+    "mcu": "stm32l152rc"
+  },
+  "frameworks": [
+    "mbed",
+    "stm32cube"
+  ],
+  "name": "NAMote72",
+  "upload": {
+    "maximum_ram_size": 32768,
+    "maximum_size": 262144
+  },
+  "debug": {
+    "tools": {
+      "stlink-v2-1": {
+        "server": {
+          "package": "tool-openocd",
+          "executable": "bin/openocd",
+          "arguments": ["-f", "scripts/board/st_nucleo_l1.cfg"]
+        }
+      }
+    }
+  },
+  "url": "https://developer.mbed.org/platforms/NAMote-72/",
+  "vendor": "Semtech"
+}
