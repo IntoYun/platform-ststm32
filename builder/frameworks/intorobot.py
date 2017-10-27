@@ -66,6 +66,24 @@ env.Append(
     ],
 )
 
+env.Replace(
+    LIBS=[]
+)
+
+if board.get("build.variant") == "intorobot-neutron":
+    env.Append(
+        LIBS=[
+            "newlib_nano",
+            "PDMFilter_CM4_GCC"
+        ]
+    )
+elif board.get("build.variant") == "intorobot-fox":
+    env.Append(
+        LIBS=[
+            "newlib_nano"
+        ]
+    )
+
 if board.get("build.mcu") == "STM32F1_STD":
     env.Append(
         CPPPATH=[
@@ -75,15 +93,17 @@ if board.get("build.mcu") == "STM32F1_STD":
         LIBPATH=[
             join(FRAMEWORK_DIR, "variants", board.get("build.variant"), "lib"),
             join(FRAMEWORK_DIR, "variants", board.get("build.variant"), "build", "linker")
+        ],
+        LIBS=[
+            "board", "platform", "gcc", "c", "nosys"
         ]
     )
     env.Replace(
-        LIBS=[],
         UPLOADERFLAGS=[
             "write",        # write in flash
             "$SOURCES",     # firmware path to flash
             board.get("upload.address")    # flash start address
-        ],
+        ]
     )
 
 else:
@@ -118,37 +138,15 @@ else:
             join(FRAMEWORK_DIR, "variants", board.get("build.variant"), "lib"),
             join(FRAMEWORK_DIR, "variants", board.get("build.variant"), "build", "linker")
         ],
-        LINKFLAGS=[
-            "-Wl,--whole-archive",
-            "-lwiring",
-            "-lwiring_ex",
-            "-lhal",
-            "-lsystem",
-            "-lservices",
-            "-lcommunication",
-            "-lplatform"
+        LIBS=[
+            "wiring", "wiring_ex", "hal", "system", "services", "communication", "platform", "gcc", "c", "nosys"
         ]
     )
     env.Replace(
-        LIBS=[],
         UPLOADERFLAGS=[
             "write",        # write in flash
             "$SOURCES",     # firmware path to flash
             board.get("upload.address")    # flash start address
-        ],
-    )
-
-if board.get("build.variant") == "intorobot-neutron":
-    env.Append(
-        LINKFLAGS=[
-            "-lnewlib_nano",
-            "-lPDMFilter_CM4_GCC"
-        ]
-    )
-elif board.get("build.variant") == "intorobot-fox":
-    env.Append(
-        LINKFLAGS=[
-            "-lnewlib_nano",
         ]
     )
 
@@ -165,15 +163,7 @@ if board.get("build.mcu") == "STM32F1_STD":
             "-u","_printf_float",
             "-Wl,--defsym,__STACKSIZE__=400",
             "--specs=nano.specs",
-            "--specs=nosys.specs",
-            "-lc",
-            "-lnosys",
-            "-lboard",
-            "-lplatform",
-            "-Wl,--start-group",
-            "-lgcc",
-            "-lc",
-            "-Wl,--end-group",
+            "--specs=nosys.specs"
         ]
     )
 
@@ -189,16 +179,9 @@ elif board.get("build.mcu") == "STM32F1":
             join(FRAMEWORK_DIR, "cores", board.get("build.core"), "platform", "MCU", "STM32F1xx", "STM32_USB_Device_Library", "Core", "Inc")
         ],
         LINKFLAGS=[
-            "-Wl,--no-whole-archive",
             "-Wl,--defsym,__STACKSIZE__=400",
             "--specs=nano.specs",
-            "--specs=nosys.specs",
-            "-lc",
-            "-lnosys",
-            "-Wl,--start-group",
-            "-lgcc",
-            "-lc",
-            "-Wl,--end-group",
+            "--specs=nosys.specs"
         ]
     )
 
@@ -214,7 +197,6 @@ elif board.get("build.mcu") == "STM32F4":
             join(FRAMEWORK_DIR, "cores", board.get("build.core"), "platform", "MCU", "STM32F4xx", "STM32_USB_Device_Library", "Core", "Inc")
         ],
         LINKFLAGS=[
-            "-Wl,--no-whole-archive",
             "-u","_printf_float",
             "-Wl,--defsym,__STACKSIZE__=1400",
             "--specs=nano.specs",
@@ -234,17 +216,10 @@ elif board.get("build.mcu") == "STM32L1":
             join(FRAMEWORK_DIR, "cores", board.get("build.core"), "platform", "MCU", "STM32L1xx", "STM32_USB_Device_Library", "Core", "Inc")
         ],
         LINKFLAGS=[
-            "-Wl,--no-whole-archive",
             "-Wl,--defsym,__STACKSIZE__=400",
             "--specs=nano.specs",
-            "--specs=nosys.specs",
-            "-lc",
-            "-lnosys",
-            "-Wl,--start-group",
-            "-lgcc",
-            "-lc",
-            "-Wl,--end-group",
-        ]
+            "--specs=nosys.specs"
+        ],
     )
 
 if env.subst("$UPLOAD_PROTOCOL") in ("serial", "dfu"):
@@ -269,39 +244,3 @@ if "__debug" in COMMAND_LINE_TARGETS:
         ("CONFIG_MAPLE_MINI_NO_DISABLE_DEBUG", "1")
     ])
 
-#
-# Lookup for specific core's libraries
-#
-
-BOARD_CORELIBDIRNAME = board.get("build.core", "")
-env.Append(
-    LIBSOURCE_DIRS=[
-        join(FRAMEWORK_DIR, "libraries", "__cores__", BOARD_CORELIBDIRNAME),
-        join(FRAMEWORK_DIR, "libraries")
-    ]
-)
-
-#
-# Target: Build Core Library
-#
-
-libs = []
-
-if "build.variant" in board:
-    env.Append(
-        CPPPATH=[
-            join(FRAMEWORK_DIR, "variants",
-                 board.get("build.variant"))
-        ]
-    )
-    libs.append(env.BuildLibrary(
-        join("$BUILD_DIR", "FrameworkArduinoVariant"),
-        join(FRAMEWORK_DIR, "variants", board.get("build.variant"))
-    ))
-
-libs.append(env.BuildLibrary(
-    join("$BUILD_DIR", "FrameworkArduino"),
-    join(FRAMEWORK_DIR, "cores", board.get("build.core"))
-))
-
-#env.Prepend(LIBS=libs)
