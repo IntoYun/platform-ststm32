@@ -35,6 +35,16 @@ FRAMEWORK_DIR = join(platform.get_package_dir(FRAMEWORK_NAME), board.get("build.
 FRAMEWORK_VERSION = platform.get_package_version(FRAMEWORK_NAME)
 assert isdir(FRAMEWORK_DIR)
 
+env.Replace(
+    LIBS=[],
+    LINKFLAGS=[
+        "-Os",
+        "-Wl,--gc-sections,--relax",
+        "-mthumb",
+        "-nostartfiles",
+        "-mcpu=%s" % env.BoardConfig().get("build.cpu")
+    ]
+)
 
 env.Append(
     ASFLAGS=[
@@ -51,7 +61,7 @@ env.Append(
         "-fno-common",
         "-Wno-switch",
         "-Wno-error=deprecated-declarations",
-        "-fmessage-length=0",
+        "-fmessage-length=0"
     ],
     CXXFLAGS=[
         "-fcheck-new",
@@ -64,10 +74,6 @@ env.Append(
         "-Xlinker",
         "--gc-sections"
     ],
-)
-
-env.Replace(
-    LIBS=[]
 )
 
 if board.get("build.variant") == "intorobot-neutron":
@@ -95,7 +101,7 @@ if board.get("build.mcu") == "STM32F1_STD":
             join(FRAMEWORK_DIR, "variants", board.get("build.variant"), "build", "linker")
         ],
         LIBS=[
-            "board", "platform", "gcc", "c", "nosys"
+            "board", "platform", "gcc", "c"
         ]
     )
     env.Replace(
@@ -139,7 +145,7 @@ else:
             join(FRAMEWORK_DIR, "variants", board.get("build.variant"), "build", "linker")
         ],
         LIBS=[
-            "wiring", "wiring_ex", "hal", "system", "services", "communication", "platform", "gcc", "c", "nosys"
+            "wiring", "wiring_ex", "hal", "system", "services", "communication", "platform", "gcc", "c"
         ]
     )
     env.Replace(
@@ -243,4 +249,7 @@ if "__debug" in COMMAND_LINE_TARGETS:
         "SERIAL_USB", "GENERIC_BOOTLOADER",
         ("CONFIG_MAPLE_MINI_NO_DISABLE_DEBUG", "1")
     ])
+
+env.Prepend(_LIBFLAGS="-Wl,-whole-archive ")
+env.Append(_LIBFLAGS=" -Wl,-no-whole-archive")
 

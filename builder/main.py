@@ -30,7 +30,7 @@ env.Replace(
     RANLIB="arm-none-eabi-ranlib",
     SIZETOOL="arm-none-eabi-size",
 
-    ARFLAGS=["rcs"],
+    ARFLAGS=["rc"],
 
     ASFLAGS=["-x", "assembler-with-cpp"],
 
@@ -58,6 +58,7 @@ env.Replace(
         "-Wl,--gc-sections,--relax",
         "-mthumb",
         "-nostartfiles",
+        "-nostdlib"
     ],
 
     LIBS=["c", "gcc", "m", "stdc++", "nosys"],
@@ -75,13 +76,6 @@ env.Replace(
     PROGNAME="firmware",
     PROGSUFFIX=".elf"
 )
-
-if env.subst("$PIOFRAMEWORK") != "intorobot":
-    env.Append(
-        LINKFLAGS=[
-            "-nostdlib"
-        ]
-    )
 
 if "BOARD" in env:
     env.Append(
