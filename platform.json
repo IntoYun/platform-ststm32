@@ -12,7 +12,7 @@
         "type": "git",
         "url": "https://github.com/intoyun/platform-ststm32.git"
     },
-    "version": "1.0.7",
+    "version": "1.0.9",
     "packageRepositories": [
         "http://dl.intoyun.com/intoyuniot/packages/manifest.json"
     ],
@@ -89,7 +89,7 @@
         "framework-intorobotststm32": {
             "type": "framework",
             "optional": true,
-            "version": "~1.6.6"
+            "version": "~1.6.7"
         },
         "tool-stlink": {
             "type": "uploader",
